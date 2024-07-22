@@ -1,0 +1,326 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+local Window = OrionLib:MakeWindow({Name = "BRONX WARE EARLY ACCESS", HidePremium = false, SaveConfig = true, ConfigFolder = "EARLY ACCESS"})
+
+--[[
+Name = <string> - The name of the UI.
+HidePremium = <bool> - Whether or not the user details shows Premium status or not.
+SaveConfig = <bool> - Toggles the config saving in the UI.
+ConfigFolder = <string> - The name of the folder where the configs are saved.
+IntroEnabled = <bool> - Whether or not to show the intro animation.
+IntroText = <string> - Text to show in the intro animation.
+IntroIcon = <string> - URL to the image you want to use in the intro animation.
+Icon = <string> - URL to the image you want displayed on the window.
+CloseCallback = <function> - Function to execute when the window is closed.
+]]
+
+
+local Tab = Window:MakeTab({
+	Name = "FAST AUTOFARM",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+--[[
+Name = <string> - The name of the tab.
+Icon = <string> - The icon of the tab.
+PremiumOnly = <bool> - Makes the tab accessible to Sirus Premium users only.
+]]
+
+
+local Section = Tab:AddSection({
+	Name = "."
+})
+
+--[[
+Name = <string> - The name of the section.
+]]
+
+OrionLib:MakeNotification({
+	Name = "THANK YOU FOR TESTING!",
+	Content = "this is only for people who bought EARLYACCESS ",
+	Image = "rbxassetid://4483345998",
+	Time = 50
+})
+
+--[[
+Title = <string> - The title of the notification.
+Content = <string> - The content of the notification.
+Image = <string> - The icon of the notification.
+Time = <number> - The duration of the notfication.
+]]
+
+
+Tab:AddLabel("NOCLIP EXECUTE BEFORE AUTOFARM")
+
+
+Tab:AddButton({
+	Name = "NOCLIP!",
+	Callback = function()
+      		local player = game.Players.LocalPlayer
+
+-- Function to enable or disable noclip
+local function setNoclip(enabled)
+    local character = player.Character
+    if not character then return end
+    
+    -- Set all parts of the character to noclip mode
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = not enabled
+        end
+    end
+end
+
+-- Function to continuously apply noclip mode
+local function applyNoclip()
+    while true do
+        -- Wait for the character to be fully loaded
+        if player.Character then
+            -- Apply noclip mode to the character
+            setNoclip(true)
+        end
+        wait(1)  -- Check every second to ensure noclip is applied
+    end
+end
+
+-- Handle character respawn and apply noclip mode
+player.CharacterAdded:Connect(function(character)
+    -- Wait for the character to be fully loaded
+    repeat wait() until character:FindFirstChildOfClass("Humanoid")
+    
+    -- Start applying noclip mode continuously
+    applyNoclip()
+end)
+
+-- If the player is already in the game, start applying noclip mode immediately
+if player.Character then
+    -- Start applying noclip mode continuously
+    applyNoclip()
+end
+
+print("Noclip ready. Start Autofarm.")
+
+  	end    
+})
+
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
+
+Tab:AddLabel("TRASH AUTOFARM")
+
+
+Tab:AddButton({
+	Name = "TRASH AUTOFARM!",
+	Callback = function()
+      		-- Get the necessary services
+local ProximityPromptService = game:GetService("ProximityPromptService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local Random = Random.new()  -- Create a Random instance for random number generation
+
+-- Clear any previous hold connections
+if _G.hold then
+    _G.hold:Disconnect()
+end
+
+-- Connect to ProximityPromptService to adjust the hold duration
+_G.hold = ProximityPromptService.PromptButtonHoldBegan:Connect(function(prompt)
+    prompt.HoldDuration = 0.1
+end)
+
+-- Function to delete a specific part from the workspace
+local function deleteTruckPart()
+    local part = game:GetService("Workspace"):FindFirstChild("cratetruck2")
+    
+    if part then
+        local truckProp = part:FindFirstChild("TruckProp")
+        if truckProp then
+            local meshPart = truckProp:FindFirstChild("MeshPart")
+            if meshPart and meshPart:IsA("BasePart") then
+                meshPart:Destroy()  -- Delete the MeshPart
+                print("Truck part deleted.")
+            else
+                warn("MeshPart not found or is not a BasePart.")
+            end
+        else
+            warn("TruckProp not found.")
+        end
+    else
+        warn("cratetruck2 not found.")
+    end
+end
+
+-- Execute the deletion function
+deleteTruckPart()
+
+-- Get the local player
+local player = Players.LocalPlayer
+
+-- Define the two CFrame positions with the updated first CFrame
+local cframe1 = CFrame.new(699.285095, 3.53719997, 166.220108, -0.75687474, -1.16764767e-07, 0.653559983, -7.204752e-08, 1, 9.52228163e-08, -0.653559983, 2.49843701e-08, -0.75687474)
+local cframe2 = CFrame.new(726.597046, 4.44065332, 215.042191, -0.882821798, 4.8518384e-08, -0.469708055, 4.94606489e-08, 1, 1.03328954e-08, 0.469708055, -1.41099603e-08, -0.882821798)
+
+-- Function to move the character to a target position with a specified speed
+local function moveToTarget(targetCFrame, speed)
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+
+    -- Save the original walk speed
+    local originalSpeed = humanoid.WalkSpeed
+
+    -- Set the new walk speed
+    humanoid.WalkSpeed = speed
+
+    -- Move to the target CFrame position
+    humanoid:MoveTo(targetCFrame.Position)
+    humanoid.MoveToFinished:Wait()  -- Wait until the character has reached the target
+
+    -- Restore the original walk speed
+    humanoid.WalkSpeed = originalSpeed
+end
+
+-- Function to simulate pressing the number key 3
+local function pressNumberKey3()
+    print("Pressing number key 3")
+    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Three, false, game)
+    wait(0.1)  -- Ensure the key press is registered
+    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Three, false, game)
+end
+
+-- Function to simulate holding down the 'E' key
+local function holdEKey(duration)
+    print("Holding E key for " .. duration .. " seconds")
+    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+    wait(duration)
+    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+end
+
+-- Create GUI to display loop count and money earned
+local function createGui()
+    -- Ensure GUI is added to PlayerGui, not StarterGui
+    local playerGui = player:WaitForChild("PlayerGui")
+    
+    -- Create ScreenGui
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "LoopCounterGui"
+    screenGui.Parent = playerGui
+
+    -- Create TextLabel for Loop Counter
+    local counterLabel = Instance.new("TextLabel")
+    counterLabel.Name = "LoopCounterLabel"
+    counterLabel.Size = UDim2.new(0, 200, 0, 50)
+    counterLabel.Position = UDim2.new(0, 10, 0, 10)  -- Left side of the screen
+    counterLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    counterLabel.BackgroundTransparency = 0.5
+    counterLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    counterLabel.TextScaled = true
+    counterLabel.Text = "Loops: 0"
+    counterLabel.Parent = screenGui
+
+    -- Create TextLabel for Money Earned
+    local moneyLabel = Instance.new("TextLabel")
+    moneyLabel.Name = "MoneyLabel"
+    moneyLabel.Size = UDim2.new(0, 200, 0, 50)
+    moneyLabel.Position = UDim2.new(0, 10, 0, 70)  -- Below the loop counter
+    moneyLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    moneyLabel.BackgroundTransparency = 0.5
+    moneyLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    moneyLabel.TextScaled = true
+    moneyLabel.Text = "Money Earned: $0"
+    moneyLabel.Parent = screenGui
+end
+
+-- Variable to keep track of the loop count and money earned
+local loopCount = 0
+local moneyEarned = 0
+
+-- Function to update the loop counter and money earned display
+local function updateGui()
+    local playerGui = player:FindFirstChild("PlayerGui")
+    if playerGui then
+        local counterLabel = playerGui:FindFirstChild("LoopCounterGui"):FindFirstChild("LoopCounterLabel")
+        local moneyLabel = playerGui:FindFirstChild("LoopCounterGui"):FindFirstChild("MoneyLabel")
+        
+        if counterLabel and moneyLabel then
+            counterLabel.Text = "Loops: " .. loopCount
+            moneyLabel.Text = "Money Earned: $" .. moneyEarned
+        else
+            warn("GUI elements not found.")
+        end
+    else
+        warn("PlayerGui not found.")
+    end
+end
+
+-- Function to get a random amount of money from the list
+local function getRandomMoneyAmount()
+    local moneyAmounts = {41, 44, 50, 45, 35, 49}
+    return moneyAmounts[Random:NextInteger(1, #moneyAmounts)]
+end
+
+-- Function to update the loop counter and add random money when reaching cframe2
+local function updateLoopAndMoney()
+    loopCount = loopCount + 1
+    local randomMoney = getRandomMoneyAmount()
+    moneyEarned = moneyEarned + randomMoney
+    updateGui()
+end
+
+-- Main loop to move between the two CFrames and perform actions
+local function moveInLoop()
+    local targetCFrames = {cframe1, cframe2}  -- Use the CFrame values
+    local currentIndex = 1
+    local walkingSpeed = 22  -- Set walking speed to 22
+
+    while true do
+        local targetCFrame = targetCFrames[currentIndex]
+        
+        print("Moving to target CFrame:", targetCFrame.Position)
+        moveToTarget(targetCFrame, walkingSpeed)
+        
+        if currentIndex == 1 then
+            holdEKey(0.3)  -- Hold down 'E' key for 0.3 seconds at cframe1
+        elseif currentIndex == 2 then
+            pressNumberKey3()  -- Press number key 3 before starting to move to cframe2
+            wait(0.1)  -- Ensure key press is processed
+            holdEKey(0.3)  -- Hold down 'E' key for 0.3 seconds at cframe2
+            updateLoopAndMoney()  -- Update loop counter and add random money when reaching cframe2
+        end
+        
+        -- Move to the next target
+        currentIndex = currentIndex % #targetCFrames + 1  -- Toggle between 1 and 2
+        
+        -- Add a short wait to prevent rapid looping issues
+        wait(0.5)
+    end
+end
+
+-- Run the GUI creation and loop when the character spawns
+player.CharacterAdded:Connect(function()
+    createGui()
+    moveInLoop()
+end)
+
+-- Run the GUI creation and loop immediately if the character is already present
+if player.Character then
+    createGui()
+    moveInLoop()
+end
+
+print("Hello World!")
+
+  	end    
+})
+
+--[[
+Name = <string> - The name of the button.
+Callback = <function> - The function of the button.
+]]
+
+
+
+
